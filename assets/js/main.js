@@ -1,169 +1,135 @@
-// SprintGear.lk JavaScript Frontend Interactivity
+/* assets/js/main.js - Sprint Gear Main Client Application Script */
 
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // 1. Color Swatch Switching
-    const swatchItems = document.querySelectorAll('.swatch-item');
-    swatchItems.forEach(swatch => {
-        swatch.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const parentCard = swatch.closest('.product-card') || swatch.closest('.product-detail-container');
-            if (!parentCard) return;
-
-            // Remove active class from sibling swatches
-            const siblingSwatches = parentCard.querySelectorAll('.swatch-item');
-            siblingSwatches.forEach(s => s.classList.remove('active'));
-
-            // Add active class
-            swatch.classList.add('active');
-
-            // Change image if swatch has data-img
-            const targetImgUrl = swatch.getAttribute('data-img');
-            if (targetImgUrl) {
-                const targetImg = parentCard.querySelector('.product-main-img img') || parentCard.querySelector('.product-image-wrapper img');
-                if (targetImg) {
-                    targetImg.style.opacity = '0.4';
-                    setTimeout(() => {
-                        targetImg.src = targetImgUrl;
-                        targetImg.style.opacity = '1';
-                    }, 150);
-                }
-            }
-        });
-    });
-
-    // 2. Add to Cart AJAX
-    const cartButtons = document.querySelectorAll('.btn-add-cart, .btn-add-to-cart-detail');
-    cartButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const productId = btn.getAttribute('data-product-id');
-            const qtyInput = document.querySelector('#product-qty');
-            const quantity = qtyInput ? qtyInput.value : 1;
-
-            if (!productId) return;
-
-            // Visual loading state
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            btn.disabled = true;
-
-            fetch('api/cart.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `action=add&product_id=${productId}&quantity=${quantity}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-
-                if (data.success) {
-                    // Update header cart badge
-                    const cartBadge = document.querySelector('#cart-count-badge');
-                    if (cartBadge) {
-                        cartBadge.textContent = data.cart_count;
-                        cartBadge.style.transform = 'scale(1.3)';
-                        setTimeout(() => cartBadge.style.transform = 'scale(1)', 200);
-                    }
-
-                    showToast('Product added to cart!');
-                } else {
-                    showToast('Failed to add product', 'error');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-                showToast('Added to cart!', 'success');
-            });
-        });
-    });
-
-    // 3. Wishlist Heart Toggle
-    const wishlistBtns = document.querySelectorAll('.product-wishlist-btn');
-    wishlistBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const productId = btn.getAttribute('data-product-id');
-            
-            btn.classList.toggle('active');
-            const icon = btn.querySelector('i');
-            if (icon) {
-                if (btn.classList.contains('active')) {
-                    icon.classList.remove('far');
-                    icon.classList.add('fas');
-                    icon.style.color = '#E74C3C';
-                } else {
-                    icon.classList.remove('fas');
-                    icon.classList.add('far');
-                    icon.style.color = '#666';
-                }
-            }
-
-            fetch('api/wishlist.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `product_id=${productId}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                const wishlistBadge = document.querySelector('#wishlist-count-badge');
-                if (wishlistBadge && data.wishlist_count !== undefined) {
-                    wishlistBadge.textContent = data.wishlist_count;
-                }
-            })
-            .catch(() => {});
-        });
-    });
-
-    // 4. Newsletter Toast Helper
-    const subscribeForm = document.querySelector('.subscribe-form');
-    if (subscribeForm) {
-        subscribeForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const input = subscribeForm.querySelector('.subscribe-input');
-            if (input && input.value.trim() !== '') {
-                showToast('Thank you for subscribing to Sprint Gear!');
-                input.value = '';
-            }
-        });
-    }
-
-    // Helper Toast Notification
-    function showToast(message, type = 'success') {
-        let toast = document.createElement('div');
-        toast.className = `sprint-toast ${type}`;
-        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${message}`;
-        
-        Object.assign(toast.style, {
-            position: 'fixed',
-            bottom: '30px',
-            right: '30px',
-            backgroundColor: type === 'success' ? '#0D0D12' : '#E74C3C',
-            color: '#FFF',
-            padding: '14px 24px',
-            borderRadius: '8px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-            zIndex: '9999',
-            fontFamily: 'Montserrat, sans-serif',
-            fontWeight: '600',
-            fontSize: '0.9rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            borderLeft: `4px solid ${type === 'success' ? '#FF4500' : '#FFF'}`,
-            transition: 'all 0.3s ease'
-        });
-
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(10px)';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
-    }
+    initMobileNav();
 });
+
+// Mobile Drawer Navigation Toggle
+function initMobileNav() {
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const navMenu = document.getElementById('navMenu');
+
+    if (mobileBtn && navMenu) {
+        mobileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navMenu.classList.toggle('open');
+            const icon = mobileBtn.querySelector('i');
+            if (navMenu.classList.contains('open')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && !mobileBtn.contains(e.target)) {
+                navMenu.classList.remove('open');
+                mobileBtn.querySelector('i').className = 'fas fa-bars';
+            }
+        });
+    }
+}
+
+// Toast Popup Notification Handler
+function showToast(message, type = 'info') {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let iconClass = 'fas fa-info-circle text-blue-400';
+    if (type === 'success') iconClass = 'fas fa-check-circle text-green-400';
+    if (type === 'error') iconClass = 'fas fa-exclamation-triangle text-red-400';
+
+    toast.innerHTML = `<i class="${iconClass}"></i> <span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+}
+
+// Wishlist Action Toggle handler via fetch AJAX
+function toggleWishlistAction(productId, buttonElement) {
+    const formData = new FormData();
+    formData.append('action', 'toggle_wishlist');
+    formData.append('product_id', productId);
+
+    fetch('wishlist.php', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.require_login) {
+            showToast(data.message, 'error');
+            setTimeout(() => { window.location.href = 'login.php'; }, 1200);
+            return;
+        }
+
+        if (data.success) {
+            const badge = document.getElementById('headerWishlistBadge');
+            if (badge) badge.textContent = data.count;
+
+            if (buttonElement) {
+                const icon = buttonElement.querySelector('i');
+                if (data.action === 'added') {
+                    buttonElement.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                    buttonElement.title = 'Remove from Wishlist';
+                } else {
+                    buttonElement.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                    buttonElement.title = 'Add to Wishlist';
+                }
+            }
+            showToast(data.message, data.action === 'added' ? 'success' : 'info');
+        } else {
+            showToast(data.message || 'Error updating wishlist.', 'error');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        showToast('Server error while toggling wishlist.', 'error');
+    });
+}
+
+// Size Guide Modal Handlers
+function openSizeGuideModal(categoryType = 'Shoes') {
+    const modal = document.getElementById('sizeGuideModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        let tabName = 'shoes';
+        if (categoryType.toLowerCase().includes('top') || categoryType.toLowerCase().includes('shirt') || categoryType.toLowerCase().includes('jersey')) tabName = 'tops';
+        if (categoryType.toLowerCase().includes('short') || categoryType.toLowerCase().includes('pant')) tabName = 'bottoms';
+        
+        const targetBtn = document.querySelector(`.modal-tabs .tab-btn[onclick*="${tabName}"]`);
+        if (targetBtn) switchSizeGuideTab(tabName, targetBtn);
+    }
+}
+
+function closeSizeGuideModal(event) {
+    if (!event || event.target.id === 'sizeGuideModal' || event.target.classList.contains('modal-close-btn')) {
+        const modal = document.getElementById('sizeGuideModal');
+        if (modal) modal.style.display = 'none';
+    }
+}
+
+function switchSizeGuideTab(tabId, btnElement) {
+    document.querySelectorAll('.size-guide-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.modal-tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+
+    const targetContent = document.getElementById(`sg-${tabId}`);
+    if (targetContent) targetContent.style.display = 'block';
+    if (btnElement) btnElement.classList.add('active');
+}
