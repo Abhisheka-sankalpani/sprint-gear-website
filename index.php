@@ -1,149 +1,101 @@
 <?php
-// index.php - SprintGear Front Page
+// index.php - Sprint Gear Home Page
+$pageTitle = "Sprint Gear | Run Faster. Play Harder. Gear Up";
 require_once __DIR__ . '/includes/header.php';
 
-// Fetch Categories from DB
-$categories_stmt = $pdo->query("SELECT * FROM categories ORDER BY id ASC LIMIT 6");
-$categories = $categories_stmt->fetchAll();
+$pdo = getDBConnection();
 
-// Fetch Featured Products from DB with color swatches
-$products_stmt = $pdo->query("SELECT * FROM products WHERE is_featured = 1 ORDER BY id ASC");
-$featured_products = $products_stmt->fetchAll();
+// Fetch 6 main categories for Shop By Category
+$stmtCats = $pdo->query("SELECT * FROM categories ORDER BY id ASC LIMIT 6");
+$homeCategories = $stmtCats->fetchAll();
+
+// Fetch Featured Products (One horizontal row on desktop)
+$stmtFeatured = $pdo->query("SELECT * FROM products WHERE status = 'active' AND is_featured = 1 ORDER BY id DESC LIMIT 4");
+$featuredProducts = $stmtFeatured->fetchAll();
+
+// Fetch Latest Products (One horizontal row on desktop, auto queried by created_at)
+$stmtLatest = $pdo->query("SELECT * FROM products WHERE status = 'active' ORDER BY created_at DESC LIMIT 4");
+$latestProducts = $stmtLatest->fetchAll();
 ?>
 
-<!-- HERO SECTION -->
+<!-- 1. HERO SECTION -->
 <section class="hero-section">
     <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <span class="hero-tag"><i class="fas fa-bolt"></i> Performance Redefined</span>
-        <h1 class="hero-title">
-            Run Faster. Play Harder.<br>
-            <span>GEAR UP WITH SPRINT GEAR</span>
-        </h1>
-        <p class="hero-description">
-            High quality sports gear for every athlete. Push your limits with the best. Engineered for track, court, and field performance.
-        </p>
-        <a href="products.php" class="btn-shop-now">
-            SHOP NOW <i class="fas fa-arrow-right"></i>
-        </a>
-    </div>
-</section>
-
-<!-- SHOP BY CATEGORY SECTION -->
-<section class="section-container">
-    <div class="section-header">
-        <span class="section-subtitle">Gear By Sport</span>
-        <h2 class="section-title">SHOP BY CATEGORY</h2>
-    </div>
-
-    <div class="categories-grid" style="display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px;">
-        <?php foreach ($categories as $cat): ?>
-            <a href="products.php?category=<?= htmlspecialchars($cat['slug']) ?>" class="category-card" style="flex: 1; min-width: 160px;">
-                <img src="<?= htmlspecialchars($cat['image']) ?>" alt="<?= htmlspecialchars($cat['name']) ?>" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
-                <div class="category-overlay">
-                    <div class="category-icon">
-                        <i class="fas <?= htmlspecialchars($cat['icon']) ?>"></i>
-                    </div>
-                    <h3 class="category-name"><?= htmlspecialchars($cat['name']) ?></h3>
-                    <div class="category-action">
-                        Explore <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
+    <div class="container hero-container">
+        <div class="hero-content">
+            <span class="hero-badge"><i class="fas fa-bolt"></i> Official Athletic Store</span>
+            <h1 class="hero-title">
+                RUN FASTER.<br>
+                PLAY HARDER.<br>
+                <span>GEAR UP WITH SPRINT GEAR</span>
+            </h1>
+            <p class="hero-desc">High quality sports gear for every athlete. Push your limits with the best.</p>
+            <a href="products.php" class="btn-hero">
+                SHOP NOW <i class="fas fa-arrow-right"></i>
             </a>
-        <?php endforeach; ?>
+        </div>
     </div>
 </section>
 
-<!-- FEATURED PRODUCTS SECTION -->
-<section class="section-container" style="background-color: #FAFAFC; border-top: 1px solid #EFEFEF; border-bottom: 1px solid #EFEFEF;">
-    <div class="section-header">
-        <span class="section-subtitle">Top Rated Gear</span>
-        <h2 class="section-title">FEATURED PRODUCTS</h2>
-    </div>
+<!-- 2. SHOP BY CATEGORY SECTION -->
+<section class="category-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">SHOP BY CATEGORY</h2>
+            <a href="products.php" class="view-all-link">VIEW ALL CATEGORIES <i class="fas fa-chevron-right"></i></a>
+        </div>
 
-    <!-- Products 6ම එකම පේළියකට ගැනීම -->
-    <div class="products-grid" style="display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 20px; padding-bottom: 20px;">
-        <?php foreach ($featured_products as $product): ?>
-            <?php
-            // Fetch color swatches for this product
-            $swatch_stmt = $pdo->prepare("
-                SELECT DISTINCT c.id, c.name, c.hex_code, pv.variant_image 
-                FROM product_variants pv 
-                JOIN colors c ON pv.color_id = c.id 
-                WHERE pv.product_id = ?
-            ");
-            $swatch_stmt->execute([$product['id']]);
-            $swatches = $swatch_stmt->fetchAll();
-            ?>
-            
-            <!-- Product කාඩ් එකක පළල සකස් කිරීම -->
-            <div class="product-card" style="flex: 0 0 auto; width: 250px;">
-                <?php if (!empty($product['sale_price'])): ?>
-                    <span class="product-badge">SALE</span>
-                <?php endif; ?>
-
-                <button class="product-wishlist-btn" data-product-id="<?= $product['id'] ?>" title="Add to Wishlist">
-                    <i class="far fa-heart"></i>
-                </button>
-
-                <a href="product-detail.php?id=<?= $product['id'] ?>" class="product-image-wrapper">
-                    <img src="<?= htmlspecialchars($product['main_image']) ?>" alt="<?= htmlspecialchars($product['title']) ?>">
+        <div class="category-row-desktop">
+            <?php foreach ($homeCategories as $cat): ?>
+                <a href="products.php?category=<?php echo urlencode($cat['name']); ?>" class="category-card">
+                    <img src="<?php echo htmlspecialchars($cat['image']); ?>" alt="<?php echo htmlspecialchars($cat['name']); ?>" class="category-card-img" loading="lazy">
+                    <div class="category-card-overlay"></div>
+                    <div class="category-card-body">
+                        <div class="category-icon"><i class="fas <?php echo htmlspecialchars($cat['icon']); ?>"></i></div>
+                        <h3 class="category-name"><?php echo htmlspecialchars($cat['name']); ?></h3>
+                    </div>
                 </a>
-
-                <div class="product-details">
-                    <span class="product-brand"><?= htmlspecialchars($product['brand']) ?></span>
-                    <h3 class="product-title">
-                        <a href="product-detail.php?id=<?= $product['id'] ?>">
-                            <?= htmlspecialchars($product['title']) ?>
-                        </a>
-                    </h3>
-
-                    <div class="product-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star-half-alt"></i>
-                        <span><?= number_format($product['rating'], 1) ?></span>
-                        <span class="rating-count">(<?= $product['reviews_count'] ?>)</span>
-                    </div>
-
-                    <!-- Color Swatches -->
-                    <div class="color-swatches">
-                        <span class="swatch-item active" style="background-color: #39FF14;" data-img="<?= htmlspecialchars($product['main_image']) ?>" title="Volt Green"></span>
-                        <?php if (!empty($product['secondary_image'])): ?>
-                            <span class="swatch-item" style="background-color: #0077BE;" data-img="<?= htmlspecialchars($product['secondary_image']) ?>" title="Ocean Blue"></span>
-                        <?php endif; ?>
-                        <span class="swatch-item" style="background-color: #111;" data-img="<?= htmlspecialchars($product['main_image']) ?>" title="Stealth Black"></span>
-                    </div>
-
-                    <div class="product-price-row">
-                        <div class="price-box">
-                            <span class="current-price">$<?= number_format($product['sale_price'] ?? $product['price'], 2) ?></span>
-                            <?php if (!empty($product['sale_price'])): ?>
-                                <span class="old-price">$<?= number_format($product['price'], 2) ?></span>
-                            <?php endif; ?>
-                        </div>
-                        <button class="btn-add-cart" data-product-id="<?= $product['id'] ?>" title="Add to Cart">
-                            <i class="fas fa-shopping-cart"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
     </div>
 </section>
 
-<!-- COMMUNITY SIGN-UP SECTION -->
-<div class="community-section">
-    <div class="community-text">
-        <h2>JOIN THE SPRINT GEAR CLUB</h2>
-        <p>Subscribe for exclusive gear drops, athlete stories, and get <strong>10% OFF</strong> your first order.</p>
+<!-- 3. FEATURED PRODUCTS SECTION -->
+<section class="products-section bg-light">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">FEATURED PRODUCTS</h2>
+                <p class="text-muted" style="margin-top:0.25rem;">Handpicked high-performance gear engineered for elite performance.</p>
+            </div>
+            <a href="products.php?featured=1" class="view-all-link">SEE ALL FEATURED <i class="fas fa-chevron-right"></i></a>
+        </div>
+
+        <div class="products-horizontal-row">
+            <?php foreach ($featuredProducts as $product): ?>
+                <?php include __DIR__ . '/includes/product-card.php'; ?>
+            <?php endforeach; ?>
+        </div>
     </div>
-    <form class="subscribe-form">
-        <input type="email" class="subscribe-input" placeholder="Enter your email address" required>
-        <button type="submit" class="btn-subscribe">JOIN NOW</button>
-    </form>
-</div>
+</section>
+
+<!-- 4. LATEST ARRIVALS PRODUCTS SECTION -->
+<section class="products-section">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">LATEST ARRIVALS</h2>
+                <p class="text-muted" style="margin-top:0.25rem;">Newly released activewear and equipment fresh from top brands.</p>
+            </div>
+            <a href="products.php?sort=latest" class="view-all-link">EXPLORE LATEST <i class="fas fa-chevron-right"></i></a>
+        </div>
+
+        <div class="products-horizontal-row">
+            <?php foreach ($latestProducts as $product): ?>
+                <?php include __DIR__ . '/includes/product-card.php'; ?>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
