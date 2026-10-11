@@ -33,13 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtIns = $pdo->prepare("INSERT INTO users (name, email, password, phone, role) VALUES (?, ?, ?, ?, 'customer')");
             $stmtIns->execute([$name, $email, $hashedPass, $phone]);
 
-            $_SESSION['user_id'] = $pdo->lastInsertId();
-            $_SESSION['user_name'] = $name;
-            $_SESSION['user_email'] = $email;
-            $_SESSION['user_role'] = 'customer';
-
-            setFlash('success', "Welcome to Sprint Gear, $name! Your account has been created.");
-            header("Location: index.php");
+            setFlash('success', "Account created successfully for $name! Please log in with your credentials below.");
+            header("Location: login.php");
             exit;
         }
     }

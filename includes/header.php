@@ -24,7 +24,7 @@ $currentSearch = sanitize($_GET['search'] ?? '');
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Core Application CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
 </head>
 <body>
 
@@ -35,8 +35,12 @@ $currentSearch = sanitize($_GET['search'] ?? '');
                 <a href="tel:+94112345678"><i class="fas fa-phone-alt"></i> +94 11 234 5678</a>
                 <span class="divider">|</span>
                 <a href="mailto:info@sprintgear.lk"><i class="fas fa-envelope"></i> info@sprintgear.lk</a>
+                <span class="divider">|</span>
+                <span style="color: #f87171; font-weight: 600;"><i class="fas fa-truck-fast"></i> Free Shipping on Orders Over LKR 5,000</span>
             </div>
             <div class="top-right">
+                <a href="<?php echo $user ? 'orders.php' : 'login.php'; ?>" style="color: #e2e8f0; font-size: 0.825rem; display: flex; align-items: center; gap: 4px;"><i class="fas fa-location-dot" style="color: #ef4444;"></i> Track Order</a>
+                <span class="divider">|</span>
                 <div class="lang-selector">
                     <i class="fas fa-globe"></i> English / LKR
                 </div>
@@ -53,14 +57,14 @@ $currentSearch = sanitize($_GET['search'] ?? '');
 
     <!-- MAIN HEADER -->
     <header class="main-header">
-        <div class="container header-container">
+        <div class="container header-container" style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
             <!-- Mobile Menu Toggle Button -->
             <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
 
             <!-- Brand Logo -->
-            <a href="index.php" class="brand-logo">
+            <a href="index.php" class="brand-logo" style="flex-shrink: 0;">
                 <div class="logo-icon"><i class="fas fa-running"></i></div>
                 <div class="logo-text">
                     <span class="brand-name">SPRINT <span class="accent-red">GEAR</span></span>
@@ -69,18 +73,19 @@ $currentSearch = sanitize($_GET['search'] ?? '');
             </a>
 
             <!-- Global Search Bar -->
-            <div class="header-search-container">
-                <form action="products.php" method="GET" class="search-form">
-                    <div class="search-input-wrapper">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" name="search" class="search-input" placeholder="Search by product, brand, running, football..." value="<?php echo $currentSearch; ?>" required>
-                        <button type="submit" class="search-btn">SEARCH</button>
+            <div class="header-search-container" style="flex: 1 1 auto !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; display: flex !important; align-items: center !important;">
+                <form action="products.php" method="GET" class="search-form" style="width: 100% !important; margin: 0 !important; display: flex !important; align-items: center !important;">
+                    <div class="search-input-wrapper" style="display: flex !important; flex-direction: row !important; align-items: center !important; width: 100% !important; height: 48px !important; background: #ffffff !important; border: 1.5px solid #cbd5e1 !important; border-radius: 30px !important; overflow: hidden !important; box-shadow: 0 2px 5px rgba(0,0,0,0.04) !important;">
+                        <input type="text" name="search" class="search-input" placeholder="Search products, brands, or sports gear..." value="<?php echo $currentSearch; ?>" required style="flex: 1 1 auto !important; width: 0 !important; min-width: 0 !important; height: 100% !important; border: none !important; outline: none !important; background: transparent !important; padding: 0 18px 0 22px !important; font-size: 14px !important; color: #0f172a !important; box-shadow: none !important;">
+                        <button type="submit" class="search-submit-btn" aria-label="Search" style="flex: 0 0 50px !important; width: 50px !important; min-width: 50px !important; max-width: 50px !important; height: 100% !important; background: #ef4444 !important; border: none !important; color: #ffffff !important; font-size: 17px !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 0 !important; margin: 0 !important;">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
                 </form>
             </div>
 
             <!-- Header Action Icons -->
-            <div class="header-actions">
+            <div class="header-actions" style="flex-shrink: 0;">
                 <!-- User Profile / Auth Link -->
                 <?php if ($user): ?>
                     <div class="user-dropdown">

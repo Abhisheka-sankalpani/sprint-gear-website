@@ -54,6 +54,15 @@ require_once __DIR__ . '/includes/header.php';
             <p>Access your sports gear orders, address book, and wishlist.</p>
         </div>
 
+        <?php 
+        $successFlash = getFlash('success');
+        if ($successFlash): 
+        ?>
+            <div class="alert-success" style="margin-bottom:1rem; padding:0.8rem; background:#ECFDF5; border:1px solid #10B981; border-radius:6px; color:#065F46; font-size:0.9rem;">
+                <i class="fas fa-check-circle"></i> <?php echo htmlspecialchars($successFlash); ?>
+            </div>
+        <?php endif; ?>
+
         <?php if ($errorMsg): ?>
             <div class="alert-error" style="margin-bottom:1rem; padding:0.8rem; background:#FEF2F2; border:1px solid #EF4444; border-radius:6px; color:#991B1B; font-size:0.9rem;">
                 <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($errorMsg); ?>

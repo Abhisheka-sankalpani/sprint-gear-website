@@ -52,13 +52,9 @@ ul {
     list-style: none;
 }
 
-img  {
-    width: 100%;
-    height: 330px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 .product-image img {
@@ -181,60 +177,86 @@ button, input, select, textarea {
 
 /* GLOBAL SEARCH BAR */
 .header-search-container {
-    flex: 1;
-    max-width: 580px;
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    max-width: 100% !important;
+    margin: 0 30px !important;
+    width: 100% !important;
 }
 
 .search-form {
-    width: 100%;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
 }
 
 .search-input-wrapper {
-    display: flex;
-    align-items: center;
-    background: #F1F5F9;
-    border: 2px solid #E2E8F0;
-    border-radius: 30px;
-    padding: 0.25rem 0.5rem 0.25rem 1rem;
-    transition: var(--transition-fast);
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    height: 46px !important;
+    background: #FFFFFF !important;
+    border: 1.5px solid #E2E8F0 !important;
+    border-radius: 30px !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
 }
 
 .search-input-wrapper:focus-within {
-    border-color: var(--primary-red);
-    background: #FFFFFF;
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
-}
-
-.search-icon {
-    color: var(--text-muted);
-    margin-right: 0.5rem;
+    border-color: #EF4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
 }
 
 .search-input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: 0.9rem;
-    color: var(--text-main);
+    flex: 1 1 auto !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    border: none !important;
+    background: transparent !important;
+    outline: none !important;
+    font-size: 0.925rem !important;
+    color: #0F172A !important;
+    padding: 0 16px 0 20px !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
 }
 
-.search-btn {
-    background: var(--primary-red);
-    color: white;
-    border: none;
-    padding: 0.55rem 1.25rem;
-    border-radius: 20px;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: var(--transition-fast);
+.search-input::placeholder {
+    color: #94A3B8 !important;
+    font-size: 0.925rem !important;
 }
 
-.search-btn:hover {
-    background: var(--primary-red-hover);
+.search-submit-btn {
+    flex: 0 0 46px !important;
+    width: 46px !important;
+    min-width: 46px !important;
+    max-width: 46px !important;
+    height: 100% !important;
+    background: #EF4444 !important;
+    border: none !important;
+    border-radius: 0 30px 30px 0 !important;
+    color: #FFFFFF !important;
+    font-size: 0.95rem !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.2s ease !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.search-submit-btn:hover {
+    background: #DC2626 !important;
 }
 
 /* HEADER ACTION ICONS */
@@ -850,77 +872,112 @@ button, input, select, textarea {
     color: white;
 }
 
-/* COMMUNITY SECTION */
+/* COMMUNITY / CLUB SIGN-UP SECTION (MATCHES REFERENCE IMAGE DESIGN) */
 .community-section {
-    background: linear-gradient(135deg, var(--secondary-dark) 0%, #1E293B 100%);
-    color: white;
-    padding: 4rem 0;
+    background: #0B0F19;
+    padding: 2.5rem 0 3.5rem 0;
 }
 
-.community-content {
+.community-card {
+    background: #141B2D;
+    border-radius: 16px;
+    padding: 3rem 3.5rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 2rem;
+    justify-content: space-between;
+    gap: 2.5rem;
+    border: 1px solid #1F2937;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.community-text {
+    max-width: 520px;
 }
 
 .community-title {
     font-family: var(--font-heading);
-    font-size: 1.8rem;
+    font-size: 1.95rem;
     font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
     margin-bottom: 0.5rem;
+    text-transform: uppercase;
 }
 
 .community-desc {
     color: #94A3B8;
-    max-width: 540px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.community-desc strong {
+    color: #FFFFFF;
+}
+
+.community-form-wrapper {
+    flex: 1;
+    max-width: 500px;
 }
 
 .community-form {
-    display: flex;
-    width: 100%;
-    max-width: 480px;
+    width: 100% !important;
+    margin: 0 !important;
+    max-width: none !important;
 }
 
-.community-form .input-group {
-    display: flex;
-    align-items: center;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 30px;
-    padding: 0.3rem 0.3rem 0.3rem 1.25rem;
-    width: 100%;
-}
-
-.community-form .input-icon {
-    color: #94A3B8;
-    margin-right: 0.5rem;
+.subscribe-input-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
 }
 
 .community-input {
-    background: transparent;
-    border: none;
-    color: white;
-    outline: none;
-    flex: 1;
-    font-size: 0.9rem;
+    flex: 1 !important;
+    min-width: 0 !important;
+    background: #0B0F19 !important;
+    border: 1px solid #1E293B !important;
+    border-radius: 8px !important;
+    color: #FFFFFF !important;
+    font-size: 0.9rem !important;
+    padding: 12px 18px !important;
+    outline: none !important;
+    height: 48px !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+
+.community-input:focus {
+    border-color: #EF4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+.community-input::placeholder {
+    color: #64748B !important;
 }
 
 .community-btn {
-    background: var(--primary-red);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.75rem;
-    border-radius: 25px;
-    font-family: var(--font-heading);
-    font-weight: 800;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: var(--transition-fast);
+    background: #FF3823 !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0 28px !important;
+    height: 48px !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 800 !important;
+    font-size: 0.9rem !important;
+    letter-spacing: 0.5px !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
+    margin: 0 !important;
+    width: auto !important;
 }
 
 .community-btn:hover {
-    background: var(--primary-red-hover);
+    background: #E02B17 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 15px rgba(255, 56, 35, 0.4) !important;
 }
 
 /* FOOTER */
@@ -1356,45 +1413,45 @@ button, input, select, textarea {
         grid-template-columns: 1fr;
     }
 }
-/* Register Form Container */
-form {
+/* Scoped Auth Form Containers */
+.auth-card form,
+.standalone-form {
     max-width: 500px;
     margin: 20px 0;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-body);
 }
 
-/* Form Labels */
-form label {
+.auth-card form label,
+.standalone-form label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    color: #0b1c3a; /* Dark blue color matching your header */
+    color: #0b1c3a;
 }
 
-/* Input Fields */
-form input[type="text"],
-form input[type="email"],
-form input[type="password"],
-form input[type="tel"] {
+.auth-card form input[type="text"],
+.auth-card form input[type="email"],
+.auth-card form input[type="password"],
+.auth-card form input[type="tel"],
+.standalone-form input {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    box-sizing: border-box;
     font-size: 14px;
 }
 
-/* Input Fields on Focus */
-form input:focus {
-    border-color: #f34848; /* Red border on focus */
+.auth-card form input:focus,
+.standalone-form input:focus {
+    border-color: #f34848;
     outline: none;
 }
 
-/* Create Account Button */
-form button, 
-form input[type="submit"] {
-    background-color: #f34848; /* Red color from your logo/search button */
+.auth-card form button, 
+.auth-card form input[type="submit"] {
+    background-color: #f34848;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -1406,8 +1463,7 @@ form input[type="submit"] {
     margin-top: 10px;
 }
 
-/* Button Hover Effect */
-form button:hover, 
-form input[type="submit"]:hover {
+.auth-card form button:hover, 
+.auth-card form input[type="submit"]:hover {
     background-color: #d13a3a;
 }

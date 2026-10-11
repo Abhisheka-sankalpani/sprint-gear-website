@@ -19,22 +19,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 ?>
 
-    <!-- COMMUNITY SIGN-UP SECTION -->
+    <!-- COMMUNITY / CLUB SIGN-UP SECTION -->
     <section class="community-section">
-        <div class="container community-content">
-            <div class="community-text">
-                <h2 class="community-title"><i class="fas fa-bolt text-red-500"></i> JOIN THE SPRINT GEAR COMMUNITY</h2>
-                <p class="community-desc">Subscribe to receive exclusive athlete gear drops, early promotional offers, and high-performance training updates.</p>
-            </div>
-            <div class="community-form-wrapper">
-                <form action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>" method="POST" class="community-form">
-                    <input type="hidden" name="action" value="subscribe_newsletter">
-                    <div class="input-group">
-                        <i class="far fa-envelope input-icon"></i>
-                        <input type="email" name="email" class="community-input" placeholder="Enter your email address" required>
-                        <button type="submit" class="community-btn">SUBSCRIBE</button>
-                    </div>
-                </form>
+        <div class="container">
+            <div class="community-card">
+                <div class="community-text">
+                    <h2 class="community-title">JOIN THE SPRINT GEAR CLUB</h2>
+                    <p class="community-desc">Subscribe for exclusive gear drops, athlete stories, and get <strong>10% OFF</strong> your first order.</p>
+                </div>
+                <div class="community-form-wrapper">
+                    <form action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>" method="POST" class="community-form">
+                        <input type="hidden" name="action" value="subscribe_newsletter">
+                        <div class="subscribe-input-wrapper">
+                            <input type="email" name="email" class="community-input" placeholder="Enter your email address" required>
+                            <button type="submit" class="community-btn">JOIN NOW</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </section>

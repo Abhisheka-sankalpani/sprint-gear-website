@@ -299,3 +299,12 @@ function toggleWishlist($productId) {
         return ['success' => true, 'action' => 'added', 'message' => 'Product added to wishlist!', 'count' => getWishlistCount()];
     }
 }
+
+// Get total count of low stock product variants (threshold default: 5 items or fewer)
+function getLowStockCount($threshold = 5) {
+    $pdo = getDBConnection();
+    $stmt = $pdo->prepare("SELECT COUNT(id) FROM product_variants WHERE stock <= ?");
+    $stmt->execute([$threshold]);
+    return (int)$stmt->fetchColumn();
+}
+
